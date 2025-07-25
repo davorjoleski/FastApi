@@ -25,8 +25,8 @@ jobs:
           pip install -r test.txt
 
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/python@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: test --file=test.txt --package-manager=pip
+        run: |
+          npm install -g snyk
+          snyk auth ${{ secrets.SNYK_TOKEN }}
+          snyk test --file=test.txt --package-manager=pip
+  
