@@ -1,0 +1,27 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [master]
+  schedule:
+    - cron: '0 0 * * 1' # секој понеделник во 00:00
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. Snyk за скенирање на зависности
+      - name: Run Snyk scan
+        uses: snyk/actions/python@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test
+
+      # 2. Bandit за Python code security
+      - name: Run Bandit
+        run: |
+          pip install bandit
+          bandit -r .
