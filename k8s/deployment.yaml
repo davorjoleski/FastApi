@@ -17,3 +17,9 @@ spec:
           image: davor.azurecr.io/my-app:latest
           ports:
             - containerPort: 80
+          env:
+            - name: AZURE_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: azure-connection-secret
+                  key: connectionString
