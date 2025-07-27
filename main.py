@@ -4,8 +4,13 @@ from fastapi.responses import JSONResponse
 from azure.storage.blob import BlobServiceClient
 import os
 load_dotenv()
+from fastapi.responses import RedirectResponse
 
 app = FastAPI()
+
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/docs")
 
 # Azure connection string преку променлива од околина
 AZURE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
