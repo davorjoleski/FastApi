@@ -1,3 +1,10 @@
+variable "arm_client_id" {}
+variable "arm_client_secret" {}
+variable "arm_tenant_id" {}
+variable "arm_subscription_id" {}
+
+
+
 # Name of the Azure Resource Group
 variable "resource_group_name" {
   description = "Name of the Azure Resource Group"

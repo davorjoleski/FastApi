@@ -14,7 +14,12 @@ terraform {
 
 # Azure Resource Manager Provider
 provider "azurerm" {
-  features {}  # Required block for AzureRM provider (no custom features in this setup)
+  features {}
+    client_id       = var.arm_client_id
+  client_secret   = var.arm_client_secret
+  tenant_id       = var.arm_tenant_id
+  subscription_id = var.arm_subscription_id
+  # Required block for AzureRM provider (no custom features in this setup)
 }
 
 # (Optional) Pin Terraform CLI version if needed, or rely on workflow to set version
