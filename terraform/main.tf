@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.75.0"
+      version = "~> 3.96.0"
     }
   }
   backend "local" {} # Може и Azure backend, но локално е доволно за сега
