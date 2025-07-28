@@ -3,11 +3,17 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from azure.storage.blob import BlobServiceClient
 import os
+
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+
 load_dotenv()
 from fastapi.responses import RedirectResponse
 
-app = FastAPI()
+app = FastAPI(docs_url="/", redoc_url=None)
 
+
+# Ова му кажува на FastAPI да ги чита правилно оригиналните headers од load balancer
+app.add_middleware(ProxyHeadersMiddleware)
 @app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse(url="/docs")
