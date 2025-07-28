@@ -1,20 +1,20 @@
+# Configure Terraform to use the latest AzureRM (v4.x) and random providers
 terraform {
   required_providers {
     azurerm = {
-      source = "hashicorp/azurerm"
-      version = "~> 3.80"
+      source  = "hashicorp/azurerm"
+      version = "~> 4.37.0"  # Use latest AzureRM provider (v4.x series)
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"    # Used for generating unique name suffixes
     }
   }
-
-  backend "azurerm" {
-    resource_group_name  = "fastapi-rg"
-    storage_account_name = "fastapistatestorage"  # мора да е уникатно
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-  }
 }
 
+# Azure Resource Manager Provider
 provider "azurerm" {
-  features {}
-
+  features {}  # Required block for AzureRM provider (no custom features in this setup)
 }
+
+# (Optional) Pin Terraform CLI version if needed, or rely on workflow to set version

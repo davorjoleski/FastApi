@@ -23,8 +23,8 @@ venv/
 *.tar
 
 #Terraform
-.terraform/
+# Local Terraform directories and files
 *.tfstate
-*.tfstate.backup
-*.terraform.lock.hcl
-terraform.tfvars
+*.tfstate.*
+.terraform/
+crash.log
