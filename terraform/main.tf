@@ -16,7 +16,7 @@ provider "azurerm" {
 # 1. Resource Group
 resource "azurerm_resource_group" "rg" {
   name     = "fastapi-rg"
-  location = "West Europe"
+  location = "westeurope"
 }
 
 # 2. Azure Container Registry
