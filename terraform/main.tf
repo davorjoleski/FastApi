@@ -20,9 +20,12 @@ resource "azurerm_storage_container" "intake" {
   storage_account_id  = azurerm_storage_account.main.id
   container_access_type = "private"
 }
-
+resource "random_integer" "suffix" {
+  min = 10000
+  max = 99999
+}
 resource "azurerm_container_registry" "acr" {
-  name                = "fastapiacr"
+  name                = "fasttapiacr${random_integer.suffix.result}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   sku                 = "Basic"
