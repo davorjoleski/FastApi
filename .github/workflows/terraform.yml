@@ -1,78 +1,41 @@
-name: Terraform CI
+name: Terraform Azure Provision
 
 on:
   push:
-    branches:
-      - master
+    paths:
+      - 'terraform/**'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1' # секој понеделник
 
 jobs:
   terraform:
+    name: 'Terraform Plan and Apply'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: terraform
 
-
-    env:
-      # Azure Service Principal credentials (set these in GitHub repo secrets)
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      # Also pass them as TF_VAR_ if Terraform variables use them
-      TF_VAR_arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
-      TF_VAR_arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-      TF_VAR_arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      TF_VAR_arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
-
     steps:
-    - name: Check out code
+    - name: Checkout repo
       uses: actions/checkout@v3
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v2
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 1.5.7
+        terraform_version: 1.7.0
 
     - name: Terraform Init
-      run: terraform init -input=false
-      env:
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        # Also pass them as TF_VAR_ if Terraform variables use them
-        TF_VAR_arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
-        TF_VAR_arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-        TF_VAR_arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        TF_VAR_arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
-
-    - name: Terraform Validate
-      run: terraform validate
+      run: terraform init
 
     - name: Terraform Plan
-      run: terraform plan -out=tfplan
-      env:
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        # Also pass them as TF_VAR_ if Terraform variables use them
-        TF_VAR_arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
-        TF_VAR_arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-        TF_VAR_arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        TF_VAR_arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+      run: terraform plan
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/master'  # apply only on main branch
-      run: terraform apply -auto-approve tfplan
+      run: terraform apply -auto-approve
+
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        # Also pass them as TF_VAR_ if Terraform variables use them
-        TF_VAR_arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
-        TF_VAR_arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-        TF_VAR_arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        TF_VAR_arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
