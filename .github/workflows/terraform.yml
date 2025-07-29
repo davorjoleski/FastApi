@@ -8,6 +8,11 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+
+
     env:
       # Azure Service Principal credentials (set these in GitHub repo secrets)
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
