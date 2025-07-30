@@ -2,16 +2,16 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "main" {
+resource "azurerm_resource_group" "fastapi-rg" {
   name     = "fastapi-rg"
   location = "West Europe"
 }
 
 
-resource "azurerm_storage_account" "main" {
+resource "azurerm_storage_account" "fastapistorageacct" {
   name                     = "fastapistorageacct"
-  resource_group_name      = azurerm_resource_group.main.name
-  location                 = azurerm_resource_group.main.location
+  resource_group_name      = azurerm_resource_group.fastapi-rg.name
+  location                 = azurerm_resource_group.fastapi-rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
@@ -19,7 +19,7 @@ resource "azurerm_storage_account" "main" {
 
 resource "azurerm_storage_container" "intake" {
   name                  = "intake"
-  storage_account_id  = azurerm_storage_account.main.id
+  storage_account_id  = azurerm_storage_account.fastapistorageacct.id
   container_access_type = "private"
 }
 resource "random_integer" "suffix" {
@@ -28,16 +28,16 @@ resource "random_integer" "suffix" {
 }
 resource "azurerm_container_registry" "acr" {
   name                = "fasttapiacr69418"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.fastapi-rg.name
+  location            = azurerm_resource_group.fastapi-rg.location
   sku                 = "Basic"
   admin_enabled       = true
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "fastapi-aks-cluster"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.fastapi-rg.location
+  resource_group_name = azurerm_resource_group.fastapi-rg.name
   dns_prefix          = "fastapiaks"
 
   default_node_pool {
