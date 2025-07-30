@@ -7,6 +7,7 @@ resource "azurerm_resource_group" "main" {
   location = "West Europe"
 }
 
+
 resource "azurerm_storage_account" "main" {
   name                     = "fastapistorageacct"
   resource_group_name      = azurerm_resource_group.main.name
