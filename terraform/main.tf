@@ -16,6 +16,7 @@ resource "azurerm_storage_account" "main" {
   account_replication_type = "LRS"
 }
 
+
 resource "azurerm_storage_container" "intake" {
   name                  = "intake"
   storage_account_id  = azurerm_storage_account.main.id
