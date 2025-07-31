@@ -18,7 +18,7 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: AZURE_STORAGE_CONNECTION_STRING
+            - name: AZURE_STORAGE_CONNECTION_STRING2
               valueFrom:
                 secretKeyRef:
                   name: azure-connection-secret
