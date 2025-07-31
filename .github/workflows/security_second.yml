@@ -1,4 +1,4 @@
-name: Snyk Security Scan  # Име на workflow-от што ќе се појави во GitHub Actions
+name: Snyk Security Scan 2 # Име на workflow-от што ќе се појави во GitHub Actions
 
 on:
   push:
