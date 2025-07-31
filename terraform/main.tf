@@ -1,7 +1,7 @@
 provider "azurerm" {
   features {}
 
-}
+} #provider.tf or versions.tf this can be set
 
 resource "azurerm_resource_group" "fastapi-rg" {
   name     = "fastapi-rg"

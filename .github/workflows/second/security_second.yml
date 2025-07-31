@@ -1,0 +1,36 @@
+name: Snyk Security Scan  # Име на workflow-от што ќе се појави во GitHub Actions
+
+on:
+  push:
+    branches: [ master ]  # Тригерирање кога ќе има push кон master гранката
+  schedule:
+    - cron: '0 0 * * 0'    # Тригерирање еднаш неделно (секое недела во 00:00)
+
+jobs:
+  security:
+    runs-on: ubuntu-latest  # Акцијата ќе се изврши во најновата Ubuntu средина
+
+    steps:
+      # Чекор 1: Се клонира твојот GitHub репозиториум
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Чекор 2: Се инсталира Python (верзија 3.11) во работната средина
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Чекор 3: Се ажурира pip и се инсталираат Python зависности од test.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r test.txt
+
+      # Чекор 4: Се инсталира Snyk CLI алатката глобално со npm,
+      # потоа се прави auth со SNYK_TOKEN (од Secrets), и се врши скенирање
+      - name: Run Snyk to check for vulnerabilities
+        run: |
+          npm install -g snyk  # Глобално инсталирање на Snyk CLI
+          snyk auth ${{ secrets.SNYK_TOKEN }}  # Автентикација со Snyk токенот
+          snyk test --file=test.txt --package-manager=pip  # Скенирање на зависности од Python проектот

@@ -1,0 +1,38 @@
+name: CI/CD to AKS second Terra
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Login to ACR
+      run: az acr login --name fasttapiacr69418 #name of ACR
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: davor.azurecr.io/my-app:latest
+
+    - name: Set AKS credentials
+      run: |
+        az aks get-credentials --resource-group fastapi-rg --name fastapi-aks-cluster --overwrite-existing
+
+    - name: Deploy to AKS
+      run: |
+        kubectl apply -f k8s2/deployment.yaml
+        kubectl apply -f k8s2/service.yaml
