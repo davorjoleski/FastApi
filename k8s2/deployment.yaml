@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: davor.azurecr.io/my-app:latest
+          image: fasttapiacr69418.azurecr.io/my-app:latest
           ports:
             - containerPort: 80
           env:

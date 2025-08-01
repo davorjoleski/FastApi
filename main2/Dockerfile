@@ -5,14 +5,14 @@ FROM python:3.11-slim
 WORKDIR /Testator
 
 # Install dependencies
-COPY test.txt .
-RUN pip install --no-cache-dir -r test.txt
+COPY test2.txt .
+RUN pip install --no-cache-dir -r test2.txt
 
 # Copy source code
-COPY . .
+COPY .. .
 
 # Expose port
 EXPOSE 8000
 
 # Run the app with uvicorn
-CMD ["uvicorn", "FastAPIProject.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main2:app", "--host", "0.0.0.0", "--port", "8100"]
