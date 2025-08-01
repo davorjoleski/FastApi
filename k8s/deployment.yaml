@@ -16,7 +16,7 @@ spec:
         - name: my-app
           image: davor.azurecr.io/my-app:latest
           ports:
-            - containerPort: 80
+            - containerPort: 8000
           env:
             - name: AZURE_STORAGE_CONNECTION_STRING
               valueFrom:
