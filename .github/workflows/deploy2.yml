@@ -25,7 +25,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./main2
-        file: /main2/Dockerfile
+        file: ./main2/Dockerfile
         push: true
         tags: fasttapiacr69418.azurecr.io/my-app:latest
 

@@ -25,7 +25,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./main
-        file: /main/Dockerfile
+        file: ./main/Dockerfile
         push: true
         tags: davor.azurecr.io/my-app:latest
 
