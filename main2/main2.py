@@ -18,19 +18,19 @@ async def root():
     return RedirectResponse(url="/docs")
 
 # Azure connection string преку променлива од околина
-AZURE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING2")
-print(f"Loaded connection string: {AZURE_CONNECTION_STRING[:20]}...")
+AZURE_CONNECTION_STRING2 = os.getenv("AZURE_STORAGE_CONNECTION_STRING2")
+print(f"Loaded connection string: {AZURE_CONNECTION_STRING2[:20]}...")
 
 CONTAINER_NAME = "intake"
 
 @app.post("/process")
 async def upload_file(file: UploadFile = File(...)):
-    if not AZURE_CONNECTION_STRING:
+    if not AZURE_CONNECTION_STRING2:
         raise HTTPException(status_code=500, detail="Azure connection string not configured")
 
     try:
         # Иницијализирај Blob клиент
-        blob_service = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
+        blob_service = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING2)
         container_client = blob_service.get_container_client(CONTAINER_NAME)
 
         # Провери дали контејнерот постои
