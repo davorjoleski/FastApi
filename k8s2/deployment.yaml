@@ -16,7 +16,7 @@ spec:
         - name: my-app
           image: fasttapiacr69418.azurecr.io/my-app:latest
           ports:
-            - containerPort: 80
+            - containerPort: 8100
           env:
             - name: AZURE_STORAGE_CONNECTION_STRING2
               valueFrom:
