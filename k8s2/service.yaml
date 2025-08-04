@@ -7,5 +7,5 @@ spec:
   selector:
     app: my-app
   ports:
-    - port: 80
+    - port: 80 #users will open in this port and loadbalancer redirect to 8100(target port that is)
       targetPort: 8100

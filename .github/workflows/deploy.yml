@@ -8,18 +8,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Step 1: Checkout code
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
+     # az login authentication
     - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+        #Login Azure Container Registiry for image to pull from docker
     - name: Login to ACR
       run: az acr login --name davor
+
+    # Step 2: Set up Docker Buildx
+      # Step 4: Build and push Docker image to ACR
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
@@ -29,9 +33,13 @@ jobs:
         push: true
         tags: davor.azurecr.io/my-app:latest
 
+    # Step 5: Set up kubectl to connect to AKS
+
     - name: Set AKS credentials
       run: |
         az aks get-credentials --resource-group davor --name clusterdavor --overwrite-existing
+
+    # Step 6: Deploy to AKS using kubectl
 
     - name: Deploy to AKS
       run: |

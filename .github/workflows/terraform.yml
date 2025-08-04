@@ -3,10 +3,7 @@ name: Terraform Azure Provision
 on:
   push:
     paths:
-      - '../../../terraform'
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * 1' # секој понеделник
+      - 'terraform/**'
 
 jobs:
   terraform:
