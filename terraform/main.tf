@@ -1,6 +1,7 @@
 provider "azurerm" {
   features {}
 
+
 } #provider.tf or versions.tf this can be set
 
 resource "azurerm_resource_group" "fastapi-rg" {
@@ -51,10 +52,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 }
-resource "azurerm_role_assignment" "aks_acr_pull" {
-  scope                = azurerm_container_registry.acr.id
-  role_definition_name = "AcrPull"
-  principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
-}
+# resource "azurerm_role_assignment" "aks_acr_pull" {
+#   scope                = azurerm_container_registry.acr.id
+#   role_definition_name = "AcrPull"
+#   principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+# }
 
 
