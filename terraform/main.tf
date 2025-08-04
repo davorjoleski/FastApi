@@ -57,6 +57,6 @@ resource "azurerm_role_assignment" "aks_acr_pull" {
   principal_id         = azurerm_kubernetes_cluster.aks.identity.principal_id
 }
   # Enable RBAC for the cluster
-role_based_access_control {
+azure_active_directory_role_based_access_control {
     enabled = true
   }
