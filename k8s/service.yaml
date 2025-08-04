@@ -1,11 +1,13 @@
+# Exposes the app to the internet using LoadBalancer service type.
+
 apiVersion: v1
 kind: Service
 metadata:
   name: my-app-service
 spec:
-  type: LoadBalancer
+  type: LoadBalancer  # Makes app publicly accessible
   selector:
     app: my-app
   ports:
-    - port: 80
-      targetPort: 8000
+    - port: 80 # External port
+      targetPort: 8000 # Port app listens to

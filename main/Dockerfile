@@ -1,3 +1,5 @@
+# Builds a Python-based FastAPI app using uvicorn
+
 # Use lightweight Python base image
 FROM python:3.11-slim
 

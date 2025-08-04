@@ -1,5 +1,6 @@
 name: Terraform Azure Provision
-
+# GitHub Actions pipeline that runs on push to the terraform folder.
+# It will initialize Terraform, run plan, then apply changes automatically.
 on:
   push:
     paths:
@@ -11,19 +12,19 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: terraform
+        working-directory: terraform # All terraform commands are run from terraform/ folder
 
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3  # Pulls code from GitHub repo
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 1.7.0
+        terraform_version: 1.7.0 Specifies Terraform version
 
     - name: Terraform Init
-      run: terraform init
+      run: terraform init # Initializes backend and provider plugins
       env:
          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -31,14 +32,14 @@ jobs:
          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan # Shows proposed infrastructure changes
       env:
          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve # Applies the changes without prompt
 
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
