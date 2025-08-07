@@ -1,7 +1,7 @@
 provider "azurerm" {
   features {}
 
-
+ #skip_provider_registration = true
 } #provider.tf or versions.tf this can be set
 
 resource "azurerm_resource_group" "fastapi-rg" {
