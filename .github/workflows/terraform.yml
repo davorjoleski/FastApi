@@ -36,7 +36,7 @@ jobs:
 
     - name: Terraform Plan
       run: terraform plan # Shows proposed infrastructure changes
-      env:
+
 
     - name: Terraform Apply
       run: terraform apply -auto-approve # Applies the changes without prompt
