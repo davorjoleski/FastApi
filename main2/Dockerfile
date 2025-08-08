@@ -5,8 +5,8 @@ FROM python:3.11-slim
 WORKDIR /Testator
 
 # Install dependencies
-COPY test2.txt .
-RUN pip install --no-cache-dir -r test2.txt
+COPY requirement.txt .
+RUN pip install --no-cache-dir -r requirement.txt
 
 # Copy source code
 COPY .. .

@@ -2,7 +2,7 @@ name: Snyk Security Scan 2 # Име на workflow-от што ќе се поја
 
 on:
   push:
-    branches: [ master ]  # Тригерирање кога ќе има push кон master гранката
+    branches: [ main ]  # Тригерирање кога ќе има push кон master гранката
   schedule:
     - cron: '0 0 * * 0'    # Тригерирање еднаш неделно (секое недела во 00:00)
 
@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r main2/test2.txt
+          pip install -r main2/requirement.txt
 
       # Чекор 4: Се инсталира Snyk CLI алатката глобално со npm,
       # потоа се прави auth со SNYK_TOKEN (од Secrets), и се врши скенирање
@@ -33,4 +33,4 @@ jobs:
         run: |
           npm install -g snyk  # Глобално инсталирање на Snyk CLI
           snyk auth ${{ secrets.SNYK_TOKEN }}  # Автентикација со Snyk токенот
-          snyk test --file=main2/test2.txt --package-manager=pip  # Скенирање на зависности од Python проектот
+          snyk test --file=main2/requirement.txt --package-manager=pip  # Скенирање на зависности од Python проектот
