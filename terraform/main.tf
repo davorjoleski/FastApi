@@ -93,18 +93,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   depends_on = [azurerm_subnet.aks_subnet]
 }
-data "azuread_service_principal" "terraform_sp" {
-  application_id = var.client_id
-}
 
-# Давање User Access Administrator на Terraform SP-то
+# Додавање User Access Administrator на AKS identity
 resource "azurerm_role_assignment" "terraform_sp_uadmin" {
   scope                = azurerm_container_registry.acr.id
   role_definition_name = "User Access Administrator"
-  principal_id         = data.azuread_service_principal.terraform_sp.id
+  principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
 }
 
-# Give AKS permission to pull from ACR
+# Давање AcrPull на AKS
 resource "azurerm_role_assignment" "aks_acr_pull" {
   depends_on           = [azurerm_role_assignment.terraform_sp_uadmin]
   scope                = azurerm_container_registry.acr.id
