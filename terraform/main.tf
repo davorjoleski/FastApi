@@ -60,7 +60,6 @@ resource "azurerm_storage_container" "tfstate" {
   storage_account_id    = azurerm_storage_account.fastapistorageacct.id
   container_access_type = "private"
 }
-
 # Container Registry
 resource "azurerm_container_registry" "acr" {
   name                = "fasttapiacr69418"
