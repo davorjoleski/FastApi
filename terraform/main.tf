@@ -15,7 +15,6 @@ resource "random_integer" "suffix" {
   min = 10000
   max = 99999
 }
-
 # Resource Group
 resource "azurerm_resource_group" "fastapi_rg" {
   name     = "fastapi-rg"
