@@ -30,13 +30,14 @@ resource "azurerm_subnet" "aks_subnet" {
   address_prefixes     = ["10.0.1.0/24"]
   delegation {
     name = "aks_delegation"
-    service_delegation {
+     service_delegation {
       name = "Microsoft.ContainerService/managedClusters"
-      actions = [
-        "Microsoft.Network/virtualNetworks/subnets/join"
-      ]
-    }
+       actions = [
+       "Microsoft.Network/virtualNetworks/subnets/join/action"
+    ]
   }
+}
+
 }
 
 # Storage Account
