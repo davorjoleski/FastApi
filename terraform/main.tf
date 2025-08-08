@@ -35,16 +35,8 @@ resource "azurerm_subnet" "aks_subnet" {
   name                 = "aks-subnet"
   resource_group_name  = azurerm_resource_group.fastapi_rg.name
   virtual_network_name = azurerm_virtual_network.fastapi_vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
-  delegation {
-    name = "aks_delegation"
-     service_delegation {
-      name = "Microsoft.ContainerService/managedClusters"
-       actions = [
-       "Microsoft.Network/virtualNetworks/subnets/join/action"
-    ]
-  }
-}
+  address_prefixes     = ["10.240.0.0/16"]
+
 
 }
 
@@ -66,7 +58,7 @@ resource "azurerm_storage_container" "intake" {
 
 # Container Registry
 resource "azurerm_container_registry" "acr" {
-  name                = "fastapiacr${random_integer.suffix.result}"
+  name                = "fasttapiacr69418"
   resource_group_name = azurerm_resource_group.fastapi_rg.name
   location            = azurerm_resource_group.fastapi_rg.location
   sku                 = "Basic"
