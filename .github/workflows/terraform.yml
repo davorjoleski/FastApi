@@ -14,6 +14,11 @@ jobs:
       run:
         working-directory: terraform # All terraform commands are run from terraform/ folder
 
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
     steps:
 
@@ -23,28 +28,16 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 1.7.0 Specifies Terraform version
+        terraform_version: 1.7.0 #Specifies Terraform version
 
     - name: Terraform Init
       run: terraform init # Initializes backend and provider plugins
-      env:
-         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
 
     - name: Terraform Plan
       run: terraform plan # Shows proposed infrastructure changes
       env:
-         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
     - name: Terraform Apply
       run: terraform apply -auto-approve # Applies the changes without prompt
 
-      env:
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
