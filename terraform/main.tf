@@ -8,8 +8,6 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
-
-
 # Random suffix to avoid name conflicts
 resource "random_integer" "suffix" {
   min = 10000
