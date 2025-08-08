@@ -13,8 +13,11 @@ jobs:
     defaults:
       run:
         working-directory: terraform # All terraform commands are run from terraform/ folder
+          - name: Show environment (DEBUG)
+             run: env | grep ARM
 
     steps:
+
     - name: Checkout repo
       uses: actions/checkout@v3  # Pulls code from GitHub repo
 
