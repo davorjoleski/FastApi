@@ -6,5 +6,6 @@ terraform {
     storage_account_name = "fastapistorageacct"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
+
   }
 }
