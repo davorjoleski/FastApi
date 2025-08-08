@@ -25,7 +25,7 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 1.7.0 Specifies Terraform version
+        terraform_version: 1.7.0  #Specifies Terraform version
 
     - name: Terraform Init
       run: terraform init # Initializes backend and provider plugins
