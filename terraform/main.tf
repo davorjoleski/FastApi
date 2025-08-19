@@ -102,16 +102,18 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 # Додавање User Access Administrator на AKS identity
-resource "azurerm_role_assignment" "terraform_sp_uadmin" {
-  scope                = azurerm_container_registry.acr.id
-  role_definition_name = "User Access Administrator"
-  principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
-}
+# resource "azurerm_role_assignment" "terraform_sp_uadmin" {
+#   scope                = azurerm_container_registry.acr.id
+#   role_definition_name = "User Access Administrator"
+#   principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+# }
 
 # Давање AcrPull на AKS
 resource "azurerm_role_assignment" "aks_acr_pull" {
-  depends_on           = [azurerm_role_assignment.terraform_sp_uadmin]
+ // depends_on           = [azurerm_role_assignment.terraform_sp_uadmin]
   scope                = azurerm_container_registry.acr.id
   role_definition_name = "AcrPull"
   principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+  skip_service_principal_aad_check = true
+
 }
