@@ -7,6 +7,7 @@ provider "azurerm" {
   subscription_id = var.subscription_id
   tenant_id       = var.tenant_id
 
+
 }
 
 # Random suffix to avoid name conflicts
@@ -65,6 +66,11 @@ resource "azurerm_container_registry" "acr" {
   location            = azurerm_resource_group.fastapi_rg.location
   sku                 = "Basic"
   admin_enabled       = true
+
+  tags = {
+    owner       = "terraform"
+    environment = "dev"
+  }
 }
 
 # Kubernetes Cluster
