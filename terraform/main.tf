@@ -65,7 +65,7 @@ resource "azurerm_container_registry" "acr" {
   resource_group_name = azurerm_resource_group.fastapi_rg.name
   location            = azurerm_resource_group.fastapi_rg.location
   sku                 = "Basic"
-  admin_enabled       = true
+
 
   tags = {
     owner       = "terraform"
@@ -90,7 +90,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   identity {
     type = "SystemAssigned"
   }
-
+  tags = {
+    Environment = "Production"
+  }
   network_profile {
     network_plugin    = "azure"
     load_balancer_sku = "standard"
@@ -101,17 +103,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   depends_on = [azurerm_subnet.aks_subnet]
 }
 
-# Додавање User Access Administrator на AKS identity
-resource "azurerm_role_assignment" "terraform_sp_uadmin" {
-  scope                = azurerm_container_registry.acr.id
-  role_definition_name = "User Access Administrator"
-  principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
-}
+
 
 # Давање AcrPull на AKS
 resource "azurerm_role_assignment" "aks_acr_pull" {
-  depends_on           = [azurerm_role_assignment.terraform_sp_uadmin]
   scope                = azurerm_container_registry.acr.id
   role_definition_name = "AcrPull"
   principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+  skip_service_principal_aad_check = true
+
 }
