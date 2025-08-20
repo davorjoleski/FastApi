@@ -90,6 +90,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   identity {
     type = "SystemAssigned"
   }
+
   tags = {
     Environment = "Production"
   }
@@ -99,7 +100,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     dns_service_ip     = "10.0.2.10"
     service_cidr       = "10.0.2.0/24"
   }
-
   depends_on = [azurerm_subnet.aks_subnet]
 }
 
