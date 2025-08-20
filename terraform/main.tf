@@ -113,3 +113,63 @@ resource "azurerm_role_assignment" "aks_acr_pull" {
   skip_service_principal_aad_check = true
 
 }
+
+resource "kubernetes_secret" "acr_secret" {
+  metadata {
+    name      = "acr-secret"
+    namespace = "default"
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  data = {
+    ".dockerconfigjson" = jsonencode({
+      auths = {
+        "${azurerm_container_registry.acr.login_server}" = {
+          username = var.client_id
+          password = var.client_secret
+          email    = "example@intertec.io"
+        }
+      }
+    })
+  }
+}
+
+resource "kubernetes_deployment" "example" {
+  metadata {
+    name      = "example-app"
+    namespace = "default"
+  }
+
+  spec {
+    replicas = 2
+
+    selector {
+      match_labels = {
+        app = "my-app"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "my-app"
+        }
+      }
+
+      spec {
+        container {
+          name  = "my-app"
+          image = "${azurerm_container_registry.acr.login_server}/my-app:latest"
+          ports {
+            container_port = 80
+          }
+        }
+
+        image_pull_secrets {
+          name = kubernetes_secret.acr_secret.metadata[0].name
+        }
+      }
+    }
+  }
+}
