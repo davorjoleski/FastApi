@@ -122,6 +122,9 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
 }
 
+
+
+
 resource "kubernetes_secret" "acr_secret" {
   metadata {
     name      = "acr-secret"
@@ -140,5 +143,21 @@ resource "kubernetes_secret" "acr_secret" {
         }
       }
     })
+  }
+}
+
+##########################################################
+# Secret за Azure Storage Connection String
+##########################################################
+resource "kubernetes_secret" "azure_storage_secret" {
+  metadata {
+    name      = "azure-connection-secret"
+    namespace = "default"
+  }
+
+  type = "Opaque"
+
+  data = {
+    connectionString = azurerm_storage_account.fastapistorageacct.primary_connection_string
   }
 }
