@@ -23,3 +23,7 @@ spec:
                 secretKeyRef:
                   name: azure-connection-secret
                   key: connectionString
+          imagePullSecrets:
+              - name: acr-secret
+
+

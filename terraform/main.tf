@@ -126,50 +126,11 @@ resource "kubernetes_secret" "acr_secret" {
     ".dockerconfigjson" = jsonencode({
       auths = {
         "${azurerm_container_registry.acr.login_server}" = {
-          username = var.client_id
-          password = var.client_secret
+          username = azurerm_container_registry.acr.admin_username
+          password = azurerm_container_registry.acr.admin_password
           email    = "example@intertec.io"
         }
       }
     })
-  }
-}
-
-resource "kubernetes_deployment" "example" {
-  metadata {
-    name      = "example-app"
-    namespace = "default"
-  }
-
-  spec {
-    replicas = 2
-
-    selector {
-      match_labels = {
-        app = "my-app"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = "my-app"
-        }
-      }
-
-      spec {
-        container {
-          name  = "my-app"
-          image = "${azurerm_container_registry.acr.login_server}/my-app:latest"
-          ports {
-            container_port = 80
-          }
-        }
-
-        image_pull_secrets {
-          name = kubernetes_secret.acr_secret.metadata[0].name
-        }
-      }
-    }
   }
 }
