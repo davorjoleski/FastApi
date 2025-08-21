@@ -125,23 +125,69 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
 }
 
-resource "kubernetes_horizontal_pod_autoscaler" "myapp_hpa" {
+resource "kubernetes_deployment" "myapp" {
   metadata {
-    name      = "my-app-hpa"
-    namespace = "default"
+    name = "my-app"   # ова е името на deployment-от
+    labels = {
+      app = "my-app"
+    }
   }
 
   spec {
-    scale_target_ref {
-      kind       = "Deployment"
-      name       = "my-app"
-      api_version = "apps/v1"
+    replicas = 2
+
+    selector {
+      match_labels = {
+        app = "my-app"
+      }
     }
 
-    min_replicas = 1
-    max_replicas = 4
+    template {
+      metadata {
+        labels = {
+          app = "my-app"
+        }
+      }
 
-    metric {
+      spec {
+        container {
+          name  = "my-app"
+          image = "nginx:latest"
+
+          resources {
+            requests = {
+              cpu    = "100m"
+              memory = "128Mi"
+            }
+            limits = {
+              cpu    = "200m"
+              memory = "256Mi"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_horizontal_pod_autoscaler" "myapp_hpa" {
+  metadata {
+    name = "my-app-hpa"
+  }
+
+  spec {
+    max_replicas = 3
+    min_replicas = 1
+
+    scale_target_ref {
+      api_version = "apps/v1"
+      kind        = "Deployment"
+      name        = kubernetes_deployment.myapp.metadata[0].name
+      # ако ти прави unresolved reference, едноставно замени со директен string:
+      # name = "my-app"
+    }
+
+    metrics {
       type = "Resource"
       resource {
         name = "cpu"
