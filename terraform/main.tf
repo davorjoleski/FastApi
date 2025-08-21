@@ -133,6 +133,7 @@ resource "helm_release" "metrics_server" {
   namespace  = "kube-system"
 }
 
+
 resource "kubernetes_horizontal_pod_autoscaler_v2" "my_app_hpa" {
   metadata {
     name      = "my-app"
