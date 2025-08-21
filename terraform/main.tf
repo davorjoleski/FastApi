@@ -156,6 +156,7 @@ resource "kubernetes_horizontal_pod_autoscaler" "myapp_hpa" {
 
 
 
+
 #for imagepullsecrets  for pods pull images
 resource "kubernetes_secret" "acr_secret" {
   metadata {
