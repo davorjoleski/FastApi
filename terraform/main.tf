@@ -187,7 +187,7 @@ resource "kubernetes_horizontal_pod_autoscaler" "myapp_hpa" {
       # name = "my-app"
     }
 
-    metrics {
+    metric {
       type = "Resource"
       resource {
         name = "cpu"
