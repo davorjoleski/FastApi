@@ -86,10 +86,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vm_size             = "Standard_DS2_v2"
     vnet_subnet_id      = azurerm_subnet.aks_subnet.id
 
-    #Auto Scaling
-    auto_scaling_enabled = true
-    min_count = 1
-    max_count = 3
+
 
   }
 
@@ -108,61 +105,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
   depends_on = [azurerm_subnet.aks_subnet]
 }
-#provider for creatigins k8s resoruces screts deployments services from terrafrom
-provider "kubernetes" {
-  host                   = azurerm_kubernetes_cluster.aks.kube_config[0].host
-  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate)
-  client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_key)
-  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
-}
 
-provider "helm" {
-  kubernetes = {
-    host                   = azurerm_kubernetes_cluster.aks.kube_config[0].host
-    client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate)
-    client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_key)
-    cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
-  }
-}
-
-
-resource "helm_release" "metrics_server" {
-  name       = "metrics-server"
-  repository = "https://kubernetes-sigs.github.io/metrics-server/"
-  chart      = "metrics-server"
-  namespace  = "kube-system"
-}
-
-resource "kubernetes_horizontal_pod_autoscaler_v2" "my_app_hpa" {
-  metadata {
-    name      = "my-app"
-    namespace = "default"
-  }
-
-  spec {
-    min_replicas = 2
-    max_replicas = 10
-
-    scale_target_ref {
-      kind        = "Deployment"
-      name        = "my-app"
-      api_version = "apps/v1"
-    }
-
-    metric {
-      type = "Resource"
-      resource {
-        name = "cpu"
-        target {
-          type                = "Utilization"
-          average_utilization = 60
-        }
-      }
-    }
-  }
-
-  depends_on = [helm_release.metrics_server]
-}
 
 
 # Add  AcrPull на AKS
@@ -174,7 +117,38 @@ resource "azurerm_role_assignment" "aks_acr_pull" {
 
 }
 
+#provider for creatigins k8s resoruces screts deployments services from terrafrom
+provider "kubernetes" {
+  host                   = azurerm_kubernetes_cluster.aks.kube_config[0].host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
+}
 
+resource "kubernetes_horizontal_pod_autoscaler" "myapp_hpa" {
+  metadata {
+    name      = "my-app-hpa"
+    namespace = "default"
+  }
+
+  spec {
+    max_replicas = 5      # максимум подови
+    min_replicas = 2      # минимум подови
+    scale_target_ref {
+      kind = "Deployment"
+      name = "my-app"
+      api_version = "apps/v1"
+    }
+
+    metric {
+      type = "Resource"
+      resource {
+        name = "cpu"
+        target_average_utilization = 50   # target CPU %
+      }
+    }
+  }
+}
 
 
 #for imagepullsecrets  for pods pull images
