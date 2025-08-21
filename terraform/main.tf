@@ -132,23 +132,28 @@ resource "kubernetes_horizontal_pod_autoscaler" "myapp_hpa" {
   }
 
   spec {
-    max_replicas = 5      # максимум подови
-    min_replicas = 2      # минимум подови
     scale_target_ref {
-      kind = "Deployment"
-      name = "my-app"
+      kind       = "Deployment"
+      name       = "my-app"
       api_version = "apps/v1"
     }
+
+    min_replicas = 1
+    max_replicas = 4
 
     metric {
       type = "Resource"
       resource {
         name = "cpu"
-        target_average_utilization = 50   # target CPU %
+        target {
+          type               = "Utilization"
+          average_utilization = 50
+        }
       }
     }
   }
 }
+
 
 
 #for imagepullsecrets  for pods pull images
