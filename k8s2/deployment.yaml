@@ -19,6 +19,13 @@ spec:
           image: fasttapiacr69418.azurecr.io/my-app:latest
           ports:
             - containerPort: 8100
+          resources:
+           requests:
+              cpu: "100m"
+              memory: "128Mi"
+           limits:
+              cpu: "500m"
+              memory: "512Mi"
           env:
             - name: AZURE_STORAGE_CONNECTION_STRING2
               valueFrom:
