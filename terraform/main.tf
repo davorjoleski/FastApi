@@ -108,8 +108,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
   depends_on = [azurerm_subnet.aks_subnet]
 }
+#provider for creatigins k8s resoruces screts deployments services from terrafrom
+provider "kubernetes" {
+  host                   = azurerm_kubernetes_cluster.aks.kube_config[0].host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
+}
 
-#Metric-server for HPA
 provider "helm" {
   kubernetes {
     host                   = azurerm_kubernetes_cluster.aks.kube_config[0].host
@@ -118,6 +124,7 @@ provider "helm" {
     cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
   }
 }
+
 
 resource "helm_release" "metrics_server" {
   name       = "metrics-server"
@@ -167,13 +174,6 @@ resource "azurerm_role_assignment" "aks_acr_pull" {
 
 }
 
-#provider for creatigins k8s resoruces screts deployments services from terrafrom
-provider "kubernetes" {
-  host                   = azurerm_kubernetes_cluster.aks.kube_config[0].host
-  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate)
-  client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_key)
-  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
-}
 
 
 
