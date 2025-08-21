@@ -88,7 +88,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
     #Auto Scaling
     auto_scaling_enabled = true
-    min_count = 1,
+    min_count = 1
     max_count = 3
 
   }
