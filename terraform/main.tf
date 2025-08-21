@@ -86,7 +86,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vm_size             = "Standard_DS2_v2"
     vnet_subnet_id      = azurerm_subnet.aks_subnet.id
 
-
+    #Auto Scaling
+    auto_scaling_enabled = true
+    min_count = 1,
+    max_count = 3
 
   }
 
@@ -124,82 +127,6 @@ provider "kubernetes" {
   client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_key)
   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
 }
-
-resource "kubernetes_deployment" "myapp" {
-  metadata {
-    name = "my-app"   # ова е името на deployment-от
-    labels = {
-      app = "my-app"
-    }
-  }
-
-  spec {
-    replicas = 2
-
-    selector {
-      match_labels = {
-        app = "my-app"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = "my-app"
-        }
-      }
-
-      spec {
-        container {
-          name  = "my-app"
-          image = "nginx:latest"
-
-          resources {
-            requests = {
-              cpu    = "100m"
-              memory = "128Mi"
-            }
-            limits = {
-              cpu    = "200m"
-              memory = "256Mi"
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_horizontal_pod_autoscaler" "myapp_hpa" {
-  metadata {
-    name = "my-app-hpa"
-  }
-
-  spec {
-    max_replicas = 3
-    min_replicas = 1
-
-    scale_target_ref {
-      api_version = "apps/v1"
-      kind        = "Deployment"
-      name        = kubernetes_deployment.myapp.metadata[0].name
-      # ако ти прави unresolved reference, едноставно замени со директен string:
-      # name = "my-app"
-    }
-
-    metric {
-      type = "Resource"
-      resource {
-        name = "cpu"
-        target {
-          type               = "Utilization"
-          average_utilization = 50
-        }
-      }
-    }
-  }
-}
-
 
 
 
