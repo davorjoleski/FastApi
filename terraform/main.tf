@@ -86,9 +86,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vnet_subnet_id      = azurerm_subnet.aks_subnet.id
 
     #Auto Scaling
-    auto_scaling_enabled = true
-    min_count = 1
-    max_count = 3
+    # auto_scaling_enabled = true
+    # min_count = 1
+    # max_count = 3
 
   }
 
@@ -108,7 +108,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   depends_on = [azurerm_subnet.aks_subnet]
 }
 
-resource "kubernetes_horizontal_pod_autoscaler" "myapp_hpa" {
+resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
   metadata {
     name      = "my-app-hpa"
     namespace = "default"
@@ -121,7 +121,7 @@ resource "kubernetes_horizontal_pod_autoscaler" "myapp_hpa" {
       name        = "my-app"
     }
 
-    min_replicas = 2
+    min_replicas = 1
     max_replicas = 5
 
     # CPU-based autoscaling (targets ~50% average CPU utilization)
