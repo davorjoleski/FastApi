@@ -85,7 +85,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vm_size             = "Standard_DS2_v2"
     vnet_subnet_id      = azurerm_subnet.aks_subnet.id
 
-    #Auto Scaling
+    #Auto Scaling autoclsuter for nodes
     auto_scaling_enabled = true
     min_count = 1
     max_count = 3
@@ -108,6 +108,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   depends_on = [azurerm_subnet.aks_subnet]
 }
 
+//HPA horizontal pod
 resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
   metadata {
     name      = "my-app-hpa"
@@ -137,6 +138,31 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
     }
   }
 }
+
+
+//VPA
+resource "kubernetes_manifest" "myapp_vpa" {
+  manifest = {
+    "apiVersion" = "autoscaling.k8s.io/v1"
+    "kind"       = "VerticalPodAutoscaler"
+    "metadata" = {
+      "name"      = "myapp-vpa"
+      "namespace" = "default"
+    }
+    "spec" = {
+      "targetRef" = {
+        "apiVersion" = "apps/v1"
+        "kind"       = "Deployment"
+        "name"       = "my-app"
+      }
+      "updatePolicy" = {
+        "updateMode" = "Auto"
+      }
+    }
+  }
+}
+
+
 
 # Add  AcrPull on AKS permission
 resource "azurerm_role_assignment" "aks_acr_pull" {
