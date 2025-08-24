@@ -86,9 +86,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vnet_subnet_id      = azurerm_subnet.aks_subnet.id
 
     #Auto Scaling
-    # auto_scaling_enabled = true
-    # min_count = 1
-    # max_count = 3
+    auto_scaling_enabled = true
+    min_count = 1
+    max_count = 3
 
   }
 
@@ -138,7 +138,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
   }
 }
 
-# Add  AcrPull на AKS
+# Add  AcrPull on AKS permission
 resource "azurerm_role_assignment" "aks_acr_pull" {
   scope                = azurerm_container_registry.acr.id
   role_definition_name = "AcrPull"
@@ -157,7 +157,7 @@ provider "kubernetes" {
 
 
 
-#for imagepullsecrets  for pods pull images
+#for imagePullSecrets  for pods pull images
 resource "kubernetes_secret" "acr_secret" {
   metadata {
     name      = "acr-secret"
