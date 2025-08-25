@@ -87,8 +87,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
     #Auto Scaling autoclsuter for nodes
     auto_scaling_enabled = true
-    min_count = 1
-    max_count = 3
+    min_count = 2
+    max_count = 4
 
   }
 
@@ -122,7 +122,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
       name        = "my-app"
     }
 
-    min_replicas = 1
+    min_replicas = 2
     max_replicas = 5
 
     # CPU-based autoscaling (targets ~50% average CPU utilization)

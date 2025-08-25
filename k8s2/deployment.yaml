@@ -19,23 +19,26 @@ spec:
           image: fasttapiacr69418.azurecr.io/my-app:latest
           ports:
             - containerPort: 8100
+          #Readiness probe(check i  if its ready for traffic)
           readinessProbe:
-              httpGet:
-                path: /healthz
-                port: 8100
-              initialDelaySeconds: 5
-              periodSeconds: 10
-          livenessProbe:
               httpGet:
                 path: /readyz
                 port: 8100
+              initialDelaySeconds: 5
+              periodSeconds: 10
+         #Livness probe(check if its alive)
+          livenessProbe:
+              httpGet:
+                path: /healthz
+                port: 8100
               initialDelaySeconds: 15
               periodSeconds: 20
+       #Startup probe
           startupProbe:
               httpGet:
                 path: /healthz
                 port: 8100
-              failureThreshold: 30
+              failureThreshold: 30 #give time to application to run first
               periodSeconds: 10
           resources:
             requests:

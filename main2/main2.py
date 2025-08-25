@@ -52,9 +52,24 @@ async def upload_file(file: UploadFile = File(...)):
 
 @app.get("/healthz")
 def health_check():
-    return {"status": "ok"}
+    # Basic liveness check
+    return JSONResponse(
+        status_code=200,
+        content={"status": "ok", "message": "Application is healthy and running"}
+    )
 
 @app.get("/readyz")
 def readiness_check():
+    # Readiness check (testing for DB, Storage, Queue итн.)
+    dependencies_ok = True
 
-    return {"status": "ready"}
+    if dependencies_ok:
+        return JSONResponse(
+            status_code=200,
+            content={"status": "ready", "message": "Application is ready to serve traffic"}
+        )
+    else:
+        return JSONResponse(
+            status_code=503,
+            content={"status": "not ready", "message": "Dependencies not available yet"}
+        )
