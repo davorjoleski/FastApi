@@ -33,7 +33,7 @@ spec:
               periodSeconds: 20
           startupProbe:
               httpGet:
-                path: /startup
+                path: /health
                 port: 8100
               failureThreshold: 30
               periodSeconds: 10
