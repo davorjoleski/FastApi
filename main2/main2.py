@@ -48,3 +48,13 @@ async def upload_file(file: UploadFile = File(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+
+@app.get("/healthz")
+def health_check():
+    return {"status": "ok"}
+
+@app.get("/readyz")
+def readiness_check():
+
+    return {"status": "ready"}
