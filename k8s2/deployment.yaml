@@ -12,6 +12,15 @@ spec:
       labels:
         app: my-app
     spec:
+      affinity:
+        podAntiAffinity: ##podAntiAffinity =do not set all pods on same Node
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: my-app
+                topologyKey: kubernetes.io/hostname #spread with node
       imagePullSecrets:
         - name: acr-secret
       containers:
@@ -26,20 +35,22 @@ spec:
                 port: 8100
               initialDelaySeconds: 5
               periodSeconds: 10
-         #Livness probe(check if its alive)
+         #Livness probe(check if its alive the app)
           livenessProbe:
               httpGet:
                 path: /healthz
                 port: 8100
               initialDelaySeconds: 15
               periodSeconds: 20
-       #Startup probe
+       #Startup probe(in time for start (do not restart long time))
           startupProbe:
               httpGet:
                 path: /healthz
                 port: 8100
-              failureThreshold: 30 #give time to application to run first
+              failureThreshold: 30 #give time to application to run first #5min
               periodSeconds: 10
+
+          #Resources(request+limits for scaling)
           resources:
             requests:
               cpu: 100m
@@ -47,6 +58,8 @@ spec:
             limits:
               cpu: 250m
               memory: 256Mi
+
+          #Secrets
           env:
             - name: AZURE_STORAGE_CONNECTION_STRING2
               valueFrom:

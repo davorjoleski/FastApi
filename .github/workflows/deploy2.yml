@@ -37,3 +37,4 @@ jobs:
       run: |
         kubectl apply -f k8s2/deployment.yaml
         kubectl apply -f k8s2/service.yaml
+        kubectl apply -f k8s2/pdb.yaml
