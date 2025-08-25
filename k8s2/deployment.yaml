@@ -18,26 +18,25 @@ spec:
         - name: my-app
           image: fasttapiacr69418.azurecr.io/my-app:latest
           ports:
-            - containerPort: 8100
-
-              readinessProbe:
-                httpGet:
-                  path: /health
-                  port: 8100
-                initialDelaySeconds: 5
-                periodSeconds: 10
-                livenessProbe:
-                  httpGet:
-                    path: /health
-                    port: 8100
-                  initialDelaySeconds: 15
-                  periodSeconds: 20
-                startupProbe:
-                  httpGet:
-                    path: /startup
-                    port: 8100
-                  failureThreshold: 30
-                  periodSeconds: 10
+        - containerPort: 8100
+          readinessProbe:
+              httpGet:
+                path: /health
+                port: 8100
+              initialDelaySeconds: 5
+              periodSeconds: 10
+          livenessProbe:
+              httpGet:
+                path: /health
+                port: 8100
+              initialDelaySeconds: 15
+              periodSeconds: 20
+          startupProbe:
+              httpGet:
+                path: /startup
+                port: 8100
+              failureThreshold: 30
+              periodSeconds: 10
           resources:
             requests:
               cpu: 100m
