@@ -18,7 +18,7 @@ spec:
         - name: my-app
           image: fasttapiacr69418.azurecr.io/my-app:latest
           ports:
-        - containerPort: 8100
+            - containerPort: 8100
           readinessProbe:
               httpGet:
                 path: /health
