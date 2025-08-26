@@ -4,7 +4,8 @@ from fastapi.responses import JSONResponse
 from azure.storage.blob import BlobServiceClient
 import os
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
-
+import math
+import time
 load_dotenv()
 from fastapi.responses import RedirectResponse
 
@@ -48,6 +49,20 @@ async def upload_file(file: UploadFile = File(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+
+# CPU intensive endpoint
+@app.get("/load")
+def load_endpoint(duration: int = 10):
+    """
+    Burns CPU for `duration` seconds.
+     /load?duration=15
+    """
+    end_time = time.time() + duration
+    result = 0
+    while time.time() < end_time:
+        result += math.sqrt(12345) * math.sqrt(67890)
+    return {"status": "done", "result": result}
 
 
 @app.get("/healthz")
