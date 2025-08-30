@@ -66,21 +66,25 @@ spec:
               secretKeyRef:
                 name: postgres-secret
                 key: DB_HOST
+
           - name: DB_NAME
             valueFrom:
               secretKeyRef:
                 name: postgres-secret
-                key: DB_NAME
+                key: POSTGRES_DB
+
           - name: DB_USER
             valueFrom:
               secretKeyRef:
                 name: postgres-secret
-                key: DB_USER
+                key: POSTGRES_USER
+
           - name: DB_PASS
             valueFrom:
               secretKeyRef:
                 name: postgres-secret
-                key: DB_PASS
+                key: POSTGRES_PASSWORD
+
           - name: AZURE_STORAGE_CONNECTION_STRING2
             valueFrom:
               secretKeyRef:
