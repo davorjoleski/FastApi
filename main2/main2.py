@@ -88,3 +88,43 @@ def readiness_check():
             status_code=503,
             content={"status": "not ready", "message": "Dependencies not available yet"}
         )
+
+    DB_HOST = os.getenv("DB_HOST", "postgres")
+    DB_NAME = os.getenv("DB_NAME", "postgres")
+    DB_USER = os.getenv("DB_USER", "postgres")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
+
+    import psycopg2
+
+    # иницијализирај connection
+    conn = psycopg2.connect(
+        host=DB_HOST,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD
+    )
+    cur = conn.cursor()
+
+    # креирај table ако не постои
+    cur.execute("""
+                CREATE TABLE IF NOT EXISTS hits
+                (
+                    id  SERIAL PRIMARY KEY,
+                    count INT NOT NULL
+                );
+                """)
+    conn.commit()
+
+    # додади иницијална row ако нема
+    cur.execute("SELECT count(*) FROM hits;")
+    if cur.fetchone()[0] == 0:
+        cur.execute("INSERT INTO hits (count) VALUES (0);")
+        conn.commit()
+
+    @app.get("/hits")
+    def get_hits():
+        cur.execute("SELECT count FROM hits WHERE id=1;")
+        count = cur.fetchone()[0]
+        cur.execute("UPDATE hits SET count = count + 1 WHERE id=1;")
+        conn.commit()
+        return {"hits": count}

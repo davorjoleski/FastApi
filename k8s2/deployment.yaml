@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: my-app
 spec:
-  replicas: 2
+
   selector:
     matchLabels:
       app: my-app
@@ -61,11 +61,31 @@ spec:
 
           #Secrets
           env:
-            - name: AZURE_STORAGE_CONNECTION_STRING2
-              valueFrom:
-                secretKeyRef:
-                  name: azure-connection-secret
-                  key: connectionString
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: DB_HOST
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: DB_NAME
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: DB_USER
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: DB_PASS
+          - name: AZURE_STORAGE_CONNECTION_STRING2
+            valueFrom:
+              secretKeyRef:
+                name: azure-connection-secret
+                key: connectionString
 
 
 

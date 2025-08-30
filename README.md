@@ -1,4 +1,4 @@
-# 🚀 Project Title
+# 🚀 Project  DevOps Practise(Basics/Advanced)
 
 ---
 
@@ -20,7 +20,7 @@ This project uses:
   ```bash
   uvicorn main2.main2:app --reload
   ```
-- Delete on `main [20]` for cutting the string of storage
+- Delete on `main [20]` for cutting the string of storage main.py
 
 ---
 
@@ -34,7 +34,7 @@ Terraform provisions:
    - Outputs kubeconfig for GitHub Actions
 4. **Storage Account**
 5. **Blob Storage Container**
-6. **Kubernetes Secret** (`azure-connection-secret`) for pulling images from ACR
+6. **Kubernetes Secret** (`azure-connection-secret`) for pulling images from ACR**(`AcrPull`)
 7. **Outputs:**
    - kubeconfig
    - ACR URL
@@ -43,7 +43,7 @@ Terraform provisions:
 ---
 
 ## ⚙️ GitHub Actions Pipeline
-
+ ## Branches main/master
 - **Triggers** on push to master branch (or `main`, depending on use case).
 - **Pipeline Steps**:
   - Builds Docker image for `main/` and `main2/`
@@ -69,7 +69,8 @@ Terraform provisions:
 ---
 
 ## 📈 Testing Replicas, HPA, Manual Scaling, Auto Scaling and Virtual Scaling
-
+ - **PodDisruptionBudget (PDB)**
+ - **Pod Anti-Affinity**
 - **HPA (Horizontal Pod Autoscaler)**  
   - Added in Terraform v2  
   - Auto chooses scaling depending on CPU (UTS)  
@@ -80,6 +81,13 @@ Terraform provisions:
 
 ---
 
+## load Test (`/load path`)
+-- CPU utilization for  conifgure testing for cluster to atuomatically scale the number of pods for certian time of period (1m)
+testing with k6 tool for scaling.
+
+ - **install** `winget install k6 --source winget`
+ - **`k6 run load-test.js`**
+ 
 ## 🔐 Secrets Required in GitHub
 
 Set in **repository settings → Secrets and variables → Actions**:

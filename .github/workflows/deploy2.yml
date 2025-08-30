@@ -33,6 +33,19 @@ jobs:
       run: |
         az aks get-credentials --resource-group fastapi-rg --name fastapi-aks-cluster --overwrite-existing
 
+    - name: Create Kubernetes Secret for Postgres (Safe Apply)
+      run: |
+        kubectl create secret generic postgres-secret \
+        --from-literal=DB_HOST=postgres \
+            --from-literal=DB_NAME=${{ secrets.POSTGRES_DB }} \
+            --from-literal=DB_USER=${{ secrets.POSTGRES_USER }} \
+            --from-literal=DB_PASS=${{ secrets.POSTGRES_PASSWORD }} \
+          --dry-run=client -o yaml | kubectl apply -f -
+
+    - name: Deploy PostgreSQL StatefulSet + Service
+      run: |
+          kubectl apply -f k8s2/postgres.yaml
+
     - name: Deploy to AKS
       run: |
         kubectl apply -f k8s2/deployment.yaml
