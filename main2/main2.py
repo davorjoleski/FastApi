@@ -1,16 +1,16 @@
+import os
+import math
+import time
 import psycopg2
 from dotenv import load_dotenv
-from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi import FastAPI, File, UploadFile, HTTPException, APIRouter
+from fastapi.responses import RedirectResponse
 from azure.storage.blob import BlobServiceClient
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
-import os, math, time
 
+# ================= Init =================
 load_dotenv()
-
 app = FastAPI(docs_url="/", redoc_url=None)
-
-# Ова му кажува на FastAPI да ги чита правилно оригиналните headers од load balancer
 app.add_middleware(ProxyHeadersMiddleware)
 
 @app.get("/", include_in_schema=False)
@@ -75,31 +75,32 @@ def get_connection():
         port=DB_PORT
     )
 
-@app.on_event("startup")
-def init_db():
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS hits (
-            id SERIAL PRIMARY KEY,
-            count INT NOT NULL
-        );
-    """)
-    # ако нема ред, креирај го
-    cur.execute("INSERT INTO hits (id, count) VALUES (1, 0) ON CONFLICT (id) DO NOTHING;")
-    conn.commit()
-    cur.close()
-    conn.close()
-
 @app.get("/hits")
 def read_hits():
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT count FROM hits WHERE id = 1;")
-    result = cur.fetchone()
-    count = result[0]
-    cur.execute("UPDATE hits SET count = count + 1 WHERE id = 1;")
-    conn.commit()
-    cur.close()
-    conn.close()
-    return {"visits": count + 1}
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+
+        # Обезбеди ред со id=1
+        cur.execute("""
+            INSERT INTO hits (id, count)
+            VALUES (1, 0)
+            ON CONFLICT (id) DO NOTHING;
+        """)
+        conn.commit()
+
+        # Прочитај count
+        cur.execute("SELECT count FROM hits WHERE id = 1;")
+        result = cur.fetchone()
+        count = result[0] if result else 0
+
+        # Зголеми го counter-от
+        cur.execute("UPDATE hits SET count = count + 1 WHERE id = 1;")
+        conn.commit()
+
+        cur.close()
+        conn.close()
+        return {"visits": count + 1}
+
+    except Exception as e:
+        return {"error": str(e)}
