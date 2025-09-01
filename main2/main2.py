@@ -1,3 +1,4 @@
+import psycopg2
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
@@ -89,42 +90,54 @@ def readiness_check():
             content={"status": "not ready", "message": "Dependencies not available yet"}
         )
 
-    DB_HOST = os.getenv("DB_HOST", "postgres")
-    DB_NAME = os.getenv("DB_NAME", "postgres")
-    DB_USER = os.getenv("DB_USER", "postgres")
-    DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
+    # Вчитување креденцијали од environment (ќе доаѓаат од Kubernetes Secret)
+    DB_NAME = os.getenv("POSTGRES_DB")
+    DB_USER = os.getenv("POSTGRES_USER")
+    DB_PASS = os.getenv("POSTGRES_PASSWORD")
+    DB_HOST = os.getenv("POSTGRES_HOST")  # ќе дојде од Kubernetes Service
+    DB_PORT = os.getenv("POSTGRES_PORT", "5432")
 
-    import psycopg2
+    def get_connection():
+        return psycopg2.connect(
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASS,
+            host=DB_HOST,
+            port=DB_PORT
+        )
 
-    # иницијализирај connection
-    conn = psycopg2.connect(
-        host=DB_HOST,
-        database=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD
-    )
-    cur = conn.cursor()
-
-    # креирај table ако не постои
-    cur.execute("""
-                CREATE TABLE IF NOT EXISTS hits
-                (
-                    id  SERIAL PRIMARY KEY,
-                    count INT NOT NULL
-                );
-                """)
-    conn.commit()
-
-    # додади иницијална row ако нема
-    cur.execute("SELECT count(*) FROM hits;")
-    if cur.fetchone()[0] == 0:
-        cur.execute("INSERT INTO hits (count) VALUES (0);")
+    # иницијализација на табела
+    @app.on_event("startup")
+    def init_db():
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("""
+                    CREATE TABLE IF NOT EXISTS hits
+                    (
+                        id
+                        SERIAL
+                        PRIMARY
+                        KEY,
+                        count
+                        INT
+                        NOT
+                        NULL
+                    );
+                    """)
+        cur.execute("INSERT INTO hits (count) VALUES (0) ON CONFLICT DO NOTHING;")
         conn.commit()
+        cur.close()
+        conn.close()
 
     @app.get("/hits")
-    def get_hits():
-        cur.execute("SELECT count FROM hits WHERE id=1;")
-        count = cur.fetchone()[0]
-        cur.execute("UPDATE hits SET count = count + 1 WHERE id=1;")
+    def read_hits():
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT count FROM hits ORDER BY id ASC LIMIT 1;")
+        result = cur.fetchone()
+        count = result[0]
+        cur.execute("UPDATE hits SET count = count + 1 WHERE id = 1;")
         conn.commit()
-        return {"hits": count}
+        cur.close()
+        conn.close()
+        return {"visits": count + 1}
