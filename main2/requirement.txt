@@ -3,3 +3,4 @@ uvicorn
 azure-storage-blob
 python-dotenv
 python-multipart
+psycopg2-binary
