@@ -39,7 +39,7 @@ jobs:
             --from-literal=POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
             --from-literal=POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
             --from-literal=POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-            --from-literal=DB_HOST=postgres-service \
+            --from-literal=POSTGRES_HOST=postgres-servicepsycopg2-binary \
             --dry-run=client -o yaml | kubectl apply -f -
     - name: Deploy PostgreSQL StatefulSet + Service
       run: |
