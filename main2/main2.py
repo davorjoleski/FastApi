@@ -81,6 +81,18 @@ def read_hits():
         conn = get_connection()
         cur = conn.cursor()
 
+        cur.execute("""
+                    CREATE TABLE IF NOT EXISTS hits
+                    (
+                        id
+                        INT
+                        PRIMARY
+                        KEY,
+                        count
+                        INT
+                    );
+                    """)
+
         # Обезбеди ред со id=1
         cur.execute("""
             INSERT INTO hits (id, count)
