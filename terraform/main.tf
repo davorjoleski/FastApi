@@ -205,7 +205,6 @@ resource "kubernetes_secret" "acr_secret" {
   }
 }
 
-
 ##########################################################
 # Secret за Azure Storage Connection String
 ##########################################################
