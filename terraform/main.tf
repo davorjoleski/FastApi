@@ -95,7 +95,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   identity {
     type = "SystemAssigned"
   }
-    node_resource_group = "fastapi-aks-nodes"
 
   tags = {
     Environment = "Production"
