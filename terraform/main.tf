@@ -141,28 +141,26 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
 
 
 //VPA
-resource "kubernetes_manifest" "myapp_vpa" {
-  provider = kubernetes.aks   # ⚠️ ова е клучно
-  depends_on = [azurerm_kubernetes_cluster.aks]
-  manifest = {
-    "apiVersion" = "autoscaling.k8s.io/v1"
-    "kind"       = "VerticalPodAutoscaler"
-    "metadata" = {
-      "name"      = "myapp-vpa"
-      "namespace" = "default"
-    }
-    "spec" = {
-      "targetRef" = {
-        "apiVersion" = "apps/v1"
-        "kind"       = "Deployment"
-        "name"       = "my-app"
-      }
-      "updatePolicy" = {
-        "updateMode" = "Auto"
-      }
-    }
-  }
-}
+# resource "kubernetes_manifest" "myapp_vpa" {
+#   manifest = {
+#     "apiVersion" = "autoscaling.k8s.io/v1"
+#     "kind"       = "VerticalPodAutoscaler"
+#     "metadata" = {
+#       "name"      = "myapp-vpa"
+#       "namespace" = "default"
+#     }
+#     "spec" = {
+#       "targetRef" = {
+#         "apiVersion" = "apps/v1"
+#         "kind"       = "Deployment"
+#         "name"       = "my-app"
+#       }
+#       "updatePolicy" = {
+#         "updateMode" = "Auto"
+#       }
+#     }
+#   }
+# }
 
 
 
