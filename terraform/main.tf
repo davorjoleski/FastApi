@@ -110,36 +110,36 @@ resource "azurerm_kubernetes_cluster" "aks" {
   depends_on = [azurerm_subnet.aks_subnet]
 }
 
-//HPA horizontal pod
-resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
-  metadata {
-    name      = "my-app-hpa"
-    namespace = "default"
-  }
-
-  spec {
-    scale_target_ref {
-      api_version = "apps/v1"
-      kind        = "Deployment"
-      name        = "my-app"
-    }
-
-    min_replicas = 2
-    max_replicas = 5
-
-    # CPU-based autoscaling (targets ~50% average CPU utilization)
-    metric {
-      type = "Resource"
-      resource {
-        name = "cpu"
-        target {
-          type                = "Utilization"
-          average_utilization = 50
-        }
-      }
-    }
-  }
-}
+# //HPA horizontal pod
+# resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
+#   metadata {
+#     name      = "my-app-hpa"
+#     namespace = "default"
+#   }
+#
+#   spec {
+#     scale_target_ref {
+#       api_version = "apps/v1"
+#       kind        = "Deployment"
+#       name        = "my-app"
+#     }
+#
+#     min_replicas = 2
+#     max_replicas = 5
+#
+#     # CPU-based autoscaling (targets ~50% average CPU utilization)
+#     metric {
+#       type = "Resource"
+#       resource {
+#         name = "cpu"
+#         target {
+#           type                = "Utilization"
+#           average_utilization = 50
+#         }
+#       }
+#     }
+#   }
+# }
 
 
 //VPA
