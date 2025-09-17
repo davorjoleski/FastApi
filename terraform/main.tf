@@ -186,39 +186,39 @@ resource "azurerm_role_assignment" "aks_acr_pull" {
 
 
 #for imagePullSecrets  for pods pull images
-resource "kubernetes_secret" "acr_secret" {
-  metadata {
-    name      = "acr-secret"
-    namespace = "default"
-  }
-
-  type = "kubernetes.io/dockerconfigjson"
-
-  data = {
-    ".dockerconfigjson" = jsonencode({
-      auths = {
-        "${azurerm_container_registry.acr.login_server}" = {
-          username = azurerm_container_registry.acr.admin_username
-          password = azurerm_container_registry.acr.admin_password
-          email    = "example@intertec.io"
-        }
-      }
-    })
-  }
-}
+# resource "kubernetes_secret" "acr_secret" {
+#   metadata {
+#     name      = "acr-secret"
+#     namespace = "default"
+#   }
+#
+#   type = "kubernetes.io/dockerconfigjson"
+#
+#   data = {
+#     ".dockerconfigjson" = jsonencode({
+#       auths = {
+#         "${azurerm_container_registry.acr.login_server}" = {
+#           username = azurerm_container_registry.acr.admin_username
+#           password = azurerm_container_registry.acr.admin_password
+#           email    = "example@intertec.io"
+#         }
+#       }
+#     })
+#   }
+# }
 
 ##########################################################
 # Secret за Azure Storage Connection String
 ##########################################################
-resource "kubernetes_secret" "azure_storage_secret" {
-  metadata {
-    name      = "azure-connection-secret"
-    namespace = "default"
-  }
-
-  type = "Opaque"
-
-  data = {
-    connectionString = azurerm_storage_account.fastapistorageacct.primary_connection_string
-  }
-}
+# resource "kubernetes_secret" "azure_storage_secret" {
+#   metadata {
+#     name      = "azure-connection-secret"
+#     namespace = "default"
+#   }
+#
+#   type = "Opaque"
+#
+#   data = {
+#     connectionString = azurerm_storage_account.fastapistorageacct.primary_connection_string
+#   }
+# }
