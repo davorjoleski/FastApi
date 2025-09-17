@@ -144,6 +144,8 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
 
 //VPA
 resource "kubernetes_manifest" "myapp_vpa" {
+    depends_on = [azurerm_kubernetes_cluster.aks]
+
   manifest = {
     "apiVersion" = "autoscaling.k8s.io/v1"
     "kind"       = "VerticalPodAutoscaler"
@@ -176,13 +178,13 @@ resource "azurerm_role_assignment" "aks_acr_pull" {
 }
 
 # #provider for creatigins k8s resoruces screts deployments services from terrafrom
-# provider "kubernetes" {
-#   host                   = azurerm_kubernetes_cluster.aks.kube_config[0].host
-#   client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate)
-#   client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_key)
-#   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
-# }
-#
+provider "kubernetes" {
+  host                   = azurerm_kubernetes_cluster.aks.kube_config[0].host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
+}
+
 
 
 #for imagePullSecrets  for pods pull images
