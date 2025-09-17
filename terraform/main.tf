@@ -111,58 +111,58 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 # //HPA horizontal pod
-# resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
-#   metadata {
-#     name      = "my-app-hpa"
-#     namespace = "default"
-#   }
-#
-#   spec {
-#     scale_target_ref {
-#       api_version = "apps/v1"
-#       kind        = "Deployment"
-#       name        = "my-app"
-#     }
-#
-#     min_replicas = 2
-#     max_replicas = 5
-#
-#     # CPU-based autoscaling (targets ~50% average CPU utilization)
-#     metric {
-#       type = "Resource"
-#       resource {
-#         name = "cpu"
-#         target {
-#           type                = "Utilization"
-#           average_utilization = 50
-#         }
-#       }
-#     }
-#   }
-# }
+resource "kubernetes_horizontal_pod_autoscaler_v2" "myapp_hpa" {
+  metadata {
+    name      = "my-app-hpa"
+    namespace = "default"
+  }
+
+  spec {
+    scale_target_ref {
+      api_version = "apps/v1"
+      kind        = "Deployment"
+      name        = "my-app"
+    }
+
+    min_replicas = 2
+    max_replicas = 5
+
+    # CPU-based autoscaling (targets ~50% average CPU utilization)
+    metric {
+      type = "Resource"
+      resource {
+        name = "cpu"
+        target {
+          type                = "Utilization"
+          average_utilization = 50
+        }
+      }
+    }
+  }
+}
 
 
 //VPA
-# resource "kubernetes_manifest" "myapp_vpa" {
-#   manifest = {
-#     "apiVersion" = "autoscaling.k8s.io/v1"
-#     "kind"       = "VerticalPodAutoscaler"
-#     "metadata" = {
-#       "name"      = "myapp-vpa"
-#       "namespace" = "default"
-#     }
-#     "spec" = {
-#       "targetRef" = {
-#         "apiVersion" = "apps/v1"
-#         "kind"       = "Deployment"
-#         "name"       = "my-app"
-#       }
-#       "updatePolicy" = {
-#         "updateMode" = "Auto"
-#       }
-#     }
-#   }
-# }
+resource "kubernetes_manifest" "myapp_vpa" {
+  manifest = {
+    "apiVersion" = "autoscaling.k8s.io/v1"
+    "kind"       = "VerticalPodAutoscaler"
+    "metadata" = {
+      "name"      = "myapp-vpa"
+      "namespace" = "default"
+    }
+    "spec" = {
+      "targetRef" = {
+        "apiVersion" = "apps/v1"
+        "kind"       = "Deployment"
+        "name"       = "my-app"
+      }
+      "updatePolicy" = {
+        "updateMode" = "Auto"
+      }
+    }
+  }
+}
 
 
 
