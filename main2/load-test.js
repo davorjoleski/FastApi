@@ -7,6 +7,6 @@ export let options = {
 };
 
 export default function () {
-  http.get("http://4.175.237.48/load");
+  http.get("http://48.222.221.49/load");
   sleep(1);
 }
