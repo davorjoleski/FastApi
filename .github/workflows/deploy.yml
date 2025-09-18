@@ -24,8 +24,8 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./main2
-        file: ./main2/Dockerfile
+        context: ./main
+        file: ./main/Dockerfile
         push: true
         tags: fasttapiacr69418.azurecr.io/my-app:latest
 
