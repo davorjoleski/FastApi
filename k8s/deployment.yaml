@@ -21,8 +21,7 @@ spec:
                   matchLabels:
                     app: my-app
                 topologyKey: kubernetes.io/hostname #spread with node
-      imagePullSecrets:
-        - name: acr-secret
+
       containers:
         - name: my-app
           image: fasttapiacr69418.azurecr.io/my-app:latest

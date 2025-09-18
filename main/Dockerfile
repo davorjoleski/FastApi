@@ -15,4 +15,4 @@ COPY .. .
 EXPOSE 8000
 
 # Run the app with uvicorn
-CMD ["uvicorn", "main2:app", "--host", "0.0.0.0", "--port", "8100"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8100"]

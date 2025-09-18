@@ -43,10 +43,10 @@ jobs:
             --dry-run=client -o yaml | kubectl apply -f -
     - name: Deploy PostgreSQL StatefulSet + Service
       run: |
-          kubectl apply -f k8s2/postgres.yaml
+          kubectl apply -f k8s/postgres.yaml
 
     - name: Deploy to AKS
       run: |
-        kubectl apply -f k8s2/deployment.yaml
-        kubectl apply -f k8s2/service.yaml
-        kubectl apply -f k8s2/pdb.yaml
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
+        kubectl apply -f k8s/pdb.yaml
